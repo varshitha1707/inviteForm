@@ -6,7 +6,15 @@ const cors = require('cors'); // Import cors middleware
 const app = express()
 const PORT = process.env.PORT || 3000
 
-app.use(cors())
+// Configure CORS options
+const corsOptions = {
+  origin: ['http://localhost:3000', 'https://wedding-invite-78ed0.web.app'], // Add your frontend URLs here
+  methods: 'GET,POST,DELETE', // Allow specific methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+}
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
 // Initialize Firebase Admin SDK
 const serviceAccount = {
   type: process.env.type,
