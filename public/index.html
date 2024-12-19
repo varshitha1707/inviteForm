@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wedding Invite Form</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #ECEFF1;
+    width: 100%;
+    margin: 20px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Set minimum width to avoid scrunching */
+    grid-gap: 20px;
+    justify-items: center; /* Center content horizontally */
+    align-items: start;    /* Align content to the top */
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; /* Add space between form and table */
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    width: 100%;
+  }
+
+  form {
+    flex: 1;
+    padding: 20px; /* Increase the max-width for better spacing on laptop */
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  #inviteForm {
+    width:100%;
+    max-width: 400px;
+  }
+
+  input {
+    display: block;
+    width: 95%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  button {
+    padding: 10px 15px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #218838;
+  }
+
+  #responseMessage {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .entry-list {
+    flex: 2;
+    max-width: 700px;
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    overflow-x: auto;
+    min-width: 300px; /* Ensure the table doesn't shrink too much */
+  }
+
+  .entry-list table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .entry-list th, 
+  .entry-list td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+
+  .entry-list th {
+    background-color: #f4f4f4;
+  }
+
+  .totals {
+    margin-top: 20px;
+    font-weight: bold;
+    text-align: right;
+  }
+
+  /* Laptop View Adjustment */
+  /* @media (max-width: 1200px) {
+    .container {
+        width:100%;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    form {
+      max-width: 400px; 
+    }
+    .entry-list {
+      max-width: 700px; 
+    }
+  } */
+
+  @media (max-width: 900px) {
+    .container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    form, 
+    .entry-list {
+      width: 100%;
+      max-width: 90%;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    .entry-list {
+      min-width: 100%; /* Ensure table doesn't shrink too much */
+    }
+  }
+
+  @media (max-width: 600px) {
+    body {
+      grid-template-columns: 1fr; /* Stack all content vertically */
+    }
+
+    .container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .entry-list {
+      min-width: 100%; /* Make the table take full width */
+      max-width: 100%;
+    }
+  }
+</style>
+
+  </head>
+  <body class="container">
+    <div id="inviteForm">
+      <h1>Wedding Invite Form</h1>
+      <form >
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="phone">Phone Number:</label>
+        <input type="text" id="phone" name="phone" required />
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required />
+
+        <label for="event1">People in Event 1:</label>
+        <input type="number" id="event1" name="event1" required />
+
+        <label for="event2">People in Event 2:</label>
+        <input type="number" id="event2" name="event2" required />
+
+        <button type="submit">Submit</button>
+      </form>
+      <p id="responseMessage"></p>
+    </div>
+
+    <div class="entry-list">
+      <h2>Entries</h2>
+      <table id="entryTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Location</th>
+            <th>Event 1</th>
+            <th>Event 2</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="totals">
+        Total Event 1: <span id="totalEvent1">0</span><br />
+        Total Event 2: <span id="totalEvent2">0</span>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('inviteForm');
+        const responseMessage = document.getElementById('responseMessage');
+        const entryTableBody = document.querySelector('#entryTable tbody');
+        const totalEvent1El = document.getElementById('totalEvent1');
+        const totalEvent2El = document.getElementById('totalEvent2');
+
+        let totalEvent1 = 0;
+        let totalEvent2 = 0;
+
+        async function fetchEntries() {
+          try {
+            const response = await fetch('https://880a-2406-7400-56-882a-a929-8efd-7166-7c24.ngrok-free.app/invites');
+            const entries = await response.json();
+
+            entryTableBody.innerHTML = '';
+            totalEvent1 = 0;
+            totalEvent2 = 0;
+
+            entries.entries.forEach(entry => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${entry.name}</td>
+                <td>${entry.phone}</td>
+                <td>${entry.location}</td>
+                <td>${entry.event1}</td>
+                <td>${entry.event2}</td>
+                <td><button data-id="${entry.id}" class="delete-btn">Delete</button></td>
+              `;
+              entryTableBody.appendChild(row);
+
+              totalEvent1 += entry.event1;
+              totalEvent2 += entry.event2;
+            });
+
+            totalEvent1El.textContent = totalEvent1;
+            totalEvent2El.textContent = totalEvent2;
+          } catch (error) {
+            console.error('Error fetching entries:', error);
+          }
+        }
+
+        async function deleteEntry(id, button) {
+          try {
+            button.textContent = 'Deleting...';
+            await fetch(`https://880a-2406-7400-56-882a-a929-8efd-7166-7c24.ngrok-free.app/delete/${id}`, { method: 'DELETE' });
+            button.textContent = 'Deleted';
+            setTimeout(() => fetchEntries(), 500);
+          } catch (error) {
+            console.error('Error deleting entry:', error);
+          }
+        }
+
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+
+          const name = form.name.value.trim();
+          const phone = form.phone.value.trim();
+          const location = form.location.value.trim();
+          const event1 = parseInt(form.event1.value.trim(), 10);
+          const event2 = parseInt(form.event2.value.trim(), 10);
+
+          if (!name || !phone || !location || isNaN(event1) || isNaN(event2)) {
+            responseMessage.textContent = 'All fields are required.';
+            responseMessage.style.color = 'red';
+            return;
+          }
+
+          try {
+            const response = await fetch('https://880a-2406-7400-56-882a-a929-8efd-7166-7c24.ngrok-free.app/submit', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ name, phone, location, event1, event2 }),
+            });
+
+            const result = await response.json();
+
+            responseMessage.textContent = result.message;
+            responseMessage.style.color = result.success ? 'green' : 'red';
+
+            if (result.success) {
+              form.reset();
+              fetchEntries();
+            }
+          } catch (error) {
+            console.error('Error submitting form:', error);
+            responseMessage.textContent = 'An error occurred while submitting.';
+            responseMessage.style.color = 'red';
+          }
+        });
+
+        entryTableBody.addEventListener('click', (event) => {
+          if (event.target.classList.contains('delete-btn')) {
+            const id = event.target.getAttribute('data-id');
+            deleteEntry(id, event.target);
+          }
+        });
+
+        fetchEntries();
+      });
+    </script>
+  </body>
+</html>
