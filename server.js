@@ -2,9 +2,11 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const { initializeApp, cert } = require('firebase-admin/app')
 const { getFirestore } = require('firebase-admin/firestore')
+const cors = require('cors'); // Import cors middleware
 const app = express()
 const PORT = process.env.PORT || 3000
 
+app.use(cors())
 // Initialize Firebase Admin SDK
 const serviceAccount = {
   type: process.env.type,
