@@ -81,6 +81,9 @@ app.get('/invites', async (req, res) => {
       entries.push({ id: doc.id, ...doc.data() })
     })
 
+    // sort the entries by timestamp newest to oldest
+    entries.sort((a, b) => b.timestamp - a.timestamp)
+
     res.json({ success: true, entries })
   } catch (error) {
     console.error('Error fetching entries from Firestore:', error)
