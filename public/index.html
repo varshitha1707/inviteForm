@@ -209,10 +209,11 @@
           <tr>
             <th>Serial No.</th>
             <th>Name</th>
+            <th>Country Code</th>
             <th>Phone</th>
             <th>Base Location</th>
-            <th>Marriage day 1</th>
-            <th>Marriage day 2</th>
+            <th>29th November</th>
+            <th>30th November</th>
             <th>Satyanarayan Pooja in Indore</th>
             <th>Reception in Indore</th>
             <th>Travel to Mumbai</th>
@@ -259,6 +260,7 @@
               row.innerHTML = `
                 <td>${entry.serialNo}</td>
                 <td>${entry.name}</td>
+                <td>${entry.countryCode}</td>
                 <td>${entry.phone}</td>
                 <td>${entry.location}</td>
                 <td>${entry.event1}</td>
@@ -295,11 +297,9 @@
         form.addEventListener('submit', async (event) => {
           event.preventDefault();
 
-          // join the country code and phone number to form a single phone number
-          const phoneNumber = form.countryCode.value.trim() + form.phone.value.trim();
-
           const name = form.name.value.trim();
-          const phone = phoneNumber;
+          const countryCode = form.countryCode.value.trim();
+          const phone = form.phone.value.trim();
           const location = form.location.value.trim();
           const event1 = parseInt(form.event1.value.trim(), 10);
           const event2 = parseInt(form.event2.value.trim(), 10);
@@ -319,7 +319,17 @@
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ name, phone, location, event1, event2, event3, event4, travelToMumbai }),
+              body: JSON.stringify({ 
+                name,
+                countryCode,
+                phone,
+                location,
+                event1,
+                event2,
+                event3,
+                event4,
+                travelToMumbai 
+              }),
             });
 
             const result = await response.json();
