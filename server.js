@@ -40,7 +40,7 @@ app.use(express.static('public')) // Serve the frontend files
 
 // Endpoint to submit an entry
 app.post('/submit', async (req, res) => {
-  const { name, phone, location, event1, event2 } = req.body
+  const { name, phone, location, event1, event2, event3, event4, travelToMumbai } = req.body
 
   if (!name || !phone || !location || isNaN(event1) || isNaN(event2)) {
     return res.json({ success: false, message: 'All fields are required!' })
@@ -61,6 +61,9 @@ app.post('/submit', async (req, res) => {
         location,
         event1,
         event2,
+        event3,
+        event4,
+        travelToMumbai,
         timestamp: new Date(),
       })
       res.json({ success: true, message: 'Invite submitted successfully!' })
