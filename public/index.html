@@ -166,6 +166,9 @@
         <label for="name">Full Name:</label>
         <input type="text" id="name" name="name" required />
 
+        <label for="countryCode">Country Code:</label>
+        <input type="text" id="countryCode" name="countryCode" required />
+
         <label for="phone">Phone Number:</label>
         <input type="text" id="phone" name="phone" required />
 
@@ -292,11 +295,17 @@
         form.addEventListener('submit', async (event) => {
           event.preventDefault();
 
+          // join the country code and phone number to form a single phone number
+          const phoneNumber = form.countryCode.value.trim() + form.phone.value.trim();
+
           const name = form.name.value.trim();
-          const phone = form.phone.value.trim();
+          const phone = phoneNumber;
           const location = form.location.value.trim();
           const event1 = parseInt(form.event1.value.trim(), 10);
           const event2 = parseInt(form.event2.value.trim(), 10);
+          const event3 = parseInt(form.event3.value.trim(), 10);
+          const event4 = parseInt(form.event4.value.trim(), 10);
+          const travelToMumbai = form.travelToMumbai.value.trim();
 
           if (!name || !phone || !location || isNaN(event1) || isNaN(event2)) {
             responseMessage.textContent = 'All fields are required.';
@@ -310,7 +319,7 @@
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ name, phone, location, event1, event2 }),
+              body: JSON.stringify({ name, phone, location, event1, event2, event3, event4, travelToMumbai }),
             });
 
             const result = await response.json();
