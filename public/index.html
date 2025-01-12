@@ -178,8 +178,11 @@
         <label for="event2">Attendees - Marriage Day 2:</label>
         <input type="number" id="event2" name="event2" required />
 
-        <label for="event3">Attendees - Reception in Indore:</label>
+        <label for="event3">Attendees - Satyanarayan Pooja in Indore:</label>
         <input type="number" id="event3" name="event3" required />
+
+        <label for="event4">Attendees - Reception in Indore:</label>
+        <input type="number" id="event4" name="event4" required />
 
         <label for="travelToMumbai">Travel to Mumbai:</label>
         <select id="travelToMumbai" name="travelToMumbai" required>
@@ -188,12 +191,6 @@
           <option value="no">No</option>
         </select>
         <br>
-        <label for="onlyIndore">Only Indore:</label>
-        <select id="onlyIndore" name="onlyIndore" required>
-          <option value="">Select</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select>
 
         <br>
         <button type="submit">Submit</button>
@@ -213,9 +210,9 @@
             <th>Base Location</th>
             <th>Marriage day 1</th>
             <th>Marriage day 2</th>
+            <th>Satyanarayan Pooja in Indore</th>
             <th>Reception in Indore</th>
             <th>Travel to Mumbai</th>
-            <th>Only Indore</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -264,8 +261,8 @@
                 <td>${entry.event1}</td>
                 <td>${entry.event2}</td>
                 <td>${entry.event3}</td>
+                <td>${entry.event4}</td>
                 <td>${entry.travelToMumbai}</td>
-                <td>${entry.onlyIndore}</td>
                 <td><button data-id="${entry.id}" class="delete-btn">Delete</button></td>
               `;
               entryTableBody.appendChild(row);
